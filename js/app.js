@@ -2,9 +2,14 @@
 "use strict";
 
 // Function for fetching data from the Random User API
+const fetchUser = () =>
     // Make a request to the API
-    // Convert it into JSON and parse it
-    // Catch any errors and notify the user on the page
+    fetch("https://randomuser.me/api/?nat=us")
+        // Convert the response into JSON and parse it
+        .then(response => response.json())
+        // Catch any errors and log it to the console
+        .catch(error => console.error(error));
+
 
 // On page load
     // Request for random user data 12 times
