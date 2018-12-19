@@ -1,10 +1,16 @@
 // Enable strict mode
 "use strict";
 
+/* 
+    Version of Random User API to use. This ensures that data will always be returned
+    in the way we expect. The current version at the time of coding is version 1.2
+*/
+const randomUserApiVersion = 1.2;
+
 // Function for fetching data from the Random User API
 const fetchUser = () =>
     // Make a request to the API
-    fetch("https://randomuser.me/api/?nat=us")
+    fetch(`https://randomuser.me/api/${randomUserApiVersion}?nat=us`)
         // Convert the response into JSON and parse it
         .then(response => response.json())
         // Catch any errors and log it to the console
