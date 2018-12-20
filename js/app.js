@@ -41,7 +41,8 @@ const fetchUsers = () => {
         .catch(error => console.error(error));
 }
 
-// On page load
+// Function to run onn page load
+const onPageLoad = () => {
     // Request for 12 random users
 
     /* Insert search functionality with following format:
@@ -87,3 +88,7 @@ const fetchUsers = () => {
                 </div>
             </div>
         */
+}
+
+// Run function on page load
+$(onPageLoad);
