@@ -11,6 +11,8 @@ const randomUserApiVersion = 1.2;
 const queryParameters = {
     // Nationality (for search functionality's sake)
     nat: "us",
+    // Number of users to generate data for
+    results: 12,
 };
 
 // Condense query parameters object into a single query string
@@ -27,7 +29,7 @@ const queryString = Object.keys(queryParameters)
         "");                  // If there are no query parameters, set query string to an empty string
 
 // Function for fetching data from the Random User API
-const fetchUser = () => {
+const fetchUsers = () => {
     // Determine API endpoint from version and query string
     const endpoint = `${randomUserApiVersion}` + queryString;
 
@@ -40,7 +42,7 @@ const fetchUser = () => {
 }
 
 // On page load
-    // Request for random user data 12 times
+    // Request for 12 random users
 
     /* Insert search functionality with following format:
         <form action="#" method="get">
