@@ -45,26 +45,26 @@ const fetchUsers = () => {
 const onPageLoad = () => {
     // Request for the set of random users
     fetchUsers().then(data => {
-        const users = data.results;
+        const employees = data.results;
 
-        // For each user in the set of data,
-        users.forEach((user) => {
+        // For each employee in the set of data,
+        employees.forEach((employee) => {
             // Interpolate their data into HTML markup
-            const userHtml = `
+            const employeeHtml = `
                 <div class="card">
                     <div class="card-img-container">
-                        <img class="card-img" src="${user.picture.medium}" alt="profile picture">
+                        <img class="card-img" src="${employee.picture.medium}" alt="profile picture">
                     </div>
                     <div class="card-info-container">
-                        <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
-                        <p class="card-text">${user.email}</p>
-                        <p class="card-text cap">${user.location.city}, ${user.location.state}</p>
+                        <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
+                        <p class="card-text">${employee.email}</p>
+                        <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
                     </div>
                 </div>
             `;
 
             // Create the element and append to gallery
-            $(userHtml)
+            $(employeeHtml)
                 .appendTo($("#gallery"));
 
             // Event listener for click event on an employee item
