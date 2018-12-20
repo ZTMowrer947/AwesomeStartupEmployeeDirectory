@@ -41,53 +41,65 @@ const fetchUsers = () => {
         .catch(error => console.error(error));
 }
 
-// Function to run onn page load
+// Function to run on page load
 const onPageLoad = () => {
-    // Request for 12 random users
+    // Request for the set of random users
+    fetchUsers().then(data => {
+        const users = data.results;
 
-    /* Insert search functionality with following format:
-        <form action="#" method="get">
-            <input type="search" id="search-input" class="search-input" placeholder="Search...">
-            <input type="submit" value="&#x1F50D;" id="serach-submit" class="search-submit">
-        </form>
-    */
-
-    /* Insert each employee into the page in the following format:
-        <div class="card">
-            <div class="card-img-container">
-                <img class="card-img" src="https://placehold.it/90x90" alt="profile picture">
-            </div>
-            <div class="card-info-container">
-                <h3 id="name" class="card-name cap">first last</h3>
-                <p class="card-text">email</p>
-                <p class="card-text cap">city, state</p>
-            </div>
-        </div>
-    */
-
-    // Event listener for click event on an employee item
-        /* Create modal for employee in the following format:
-            <div class="modal-container">
-                <div class="modal">
-                    <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-                    <div class="modal-info-container">
-                        <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
-                        <h3 id="name" class="modal-name cap">name</h3>
-                        <p class="modal-text">email</p>
-                        <p class="modal-text cap">city</p>
-                        <hr>
-                        <p class="modal-text">(555) 555-5555</p>
-                        <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
-                        <p class="modal-text">Birthday: 10/21/2015</p>
+        // For each user in the set of data,
+        users.forEach((user) => {
+            // Interpolate their data into HTML markup
+            const userHtml = `
+                <div class="card">
+                    <div class="card-img-container">
+                        <img class="card-img" src="${user.picture.thumbnail}" alt="profile picture">
+                    </div>
+                    <div class="card-info-container">
+                        <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
+                        <p class="card-text">${user.email}</p>
+                        <p class="card-text cap">${user.location.city}, ${user.location.state}</p>
                     </div>
                 </div>
+            `;
 
-                <div class="modal-btn-container">
-                    <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-                    <button type="button" id="modal-next" class="modal-next btn">Next</button>
-                </div>
-            </div>
-        */
+            // Create the element and append to gallery
+            $(userHtml)
+                .appendTo($("#gallery"));
+
+            // Event listener for click event on an employee item
+                /* Create modal for employee in the following format:
+                    <div class="modal-container">
+                        <div class="modal">
+                            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                            <div class="modal-info-container">
+                                <img class="modal-img" src="https://placehold.it/125x125" alt="profile picture">
+                                <h3 id="name" class="modal-name cap">name</h3>
+                                <p class="modal-text">email</p>
+                                <p class="modal-text cap">city</p>
+                                <hr>
+                                <p class="modal-text">(555) 555-5555</p>
+                                <p class="modal-text">123 Portland Ave., Portland, OR 97204</p>
+                                <p class="modal-text">Birthday: 10/21/2015</p>
+                            </div>
+                        </div>
+
+                        <div class="modal-btn-container">
+                            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                            <button type="button" id="modal-next" class="modal-next btn">Next</button>
+                        </div>
+                    </div>
+                */
+
+            /* Insert search functionality with following format:
+                <form action="#" method="get">
+                    <input type="search" id="search-input" class="search-input" placeholder="Search...">
+                    <input type="submit" value="&#x1F50D;" id="serach-submit" class="search-submit">
+                </form>
+            */
+        });
+    });
+
 }
 
 // Run function on page load
