@@ -7,15 +7,37 @@
 */
 const randomUserApiVersion = 1.2;
 
+// Query Parameters to pass to the API request
+const queryParameters = {
+    // Nationality (for search functionality's sake)
+    nat: "us",
+};
+
+// Condense query parameters object into a single query string
+const queryString = Object.keys(queryParameters)
+    // Reduce array of query parameter keys into a single value
+    .reduce((queryString, paramKey, index) =>
+        queryString += (
+                index === 0 ? // If this is the first element,
+                "?" :         // Insert the starting question mark
+                "&"           // Otherwise, insert the joining ampersand
+            ) +
+            // Insert the key-value pair itself
+            `${paramKey}=${queryParameters[paramKey]}`,
+        "");                  // If there are no query parameters, set query string to an empty string
+
 // Function for fetching data from the Random User API
-const fetchUser = () =>
+const fetchUser = () => {
+    // Determine API endpoint from version and query string
+    const endpoint = `${randomUserApiVersion}` + queryString;
+
     // Make a request to the API
-    fetch(`https://randomuser.me/api/${randomUserApiVersion}?nat=us`)
+    return fetch(`https://randomuser.me/api/${endpoint}`)
         // Convert the response into JSON and parse it
         .then(response => response.json())
         // Catch any errors and log it to the console
         .catch(error => console.error(error));
-
+}
 
 // On page load
     // Request for random user data 12 times
