@@ -109,7 +109,7 @@ const onPageLoad = () => {
                                     <p class="modal-text">
                                         ${capitalizedStreetAddress}, 
                                         ${capitalizeString(employee.location.city)}, 
-                                        ${employee.location.state}
+                                        ${stateAbbreviations[employee.location.state]}
                                         ${employee.location.postcode}
                                     </p>
                                     <p class="modal-text">Birthday: ${dobString}</p>
