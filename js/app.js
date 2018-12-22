@@ -89,6 +89,11 @@ const onPageLoad = () => {
                     // Format date of birth into expected format
                     const dobString = dob.toLocaleDateString(undefined, formatOptions);
 
+                    const capitalizedStreetAddress = employee.location.street
+                        .split(" ")
+                        .map((streetPart) => capitalizeString(streetPart))
+                        .join(" ");
+
                     // HTML Markup for employee modal
                     const modalHtml = `
                         <div class="modal-container">
@@ -101,7 +106,12 @@ const onPageLoad = () => {
                                     <p class="modal-text cap">${employee.location.city}</p>
                                     <hr>
                                     <p class="modal-text">${employee.phone}</p>
-                                    <p class="modal-text">${employee.location.street}, ${employee.location.city}, ${employee.location.state} ${employee.location.postcode}</p>
+                                    <p class="modal-text">
+                                        ${capitalizedStreetAddress}, 
+                                        ${capitalizeString(employee.location.city)}, 
+                                        ${employee.location.state}
+                                        ${employee.location.postcode}
+                                    </p>
                                     <p class="modal-text">Birthday: ${dobString}</p>
                                 </div>
                             </div>
