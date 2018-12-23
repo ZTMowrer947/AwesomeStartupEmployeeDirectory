@@ -43,6 +43,7 @@ const fetchUsers = () => {
 
 // Create modal display for the employee from the given array of employees with the given index
 const createModalForEmployee = (employees, index) => {
+    // Remove any currently displayed modal containers
     $(".modal-container").remove();
 
     // Get employee
@@ -64,9 +65,13 @@ const createModalForEmployee = (employees, index) => {
     // Format date of birth into expected format
     const dobString = dob.toLocaleDateString(undefined, formatOptions);
 
+    // Capitalize parts of street address
     const capitalizedStreetAddress = employee.location.street
+        // Split each parts of the street address separated by a string into an array
         .split(" ")
+        // Capitalize each part of the address
         .map((streetPart) => capitalizeString(streetPart))
+        // Join it back together with a space
         .join(" ");
 
     // HTML Markup for employee modal
@@ -107,16 +112,23 @@ const createModalForEmployee = (employees, index) => {
         // Close modal on click
         .on("click", () => $modal.remove());
 
-    // Declare variables for indexes (indices) for previous and next element
+    // Declare variables for indexes (indices) for previous and next employee
     let prevIndex = index - 1;
     let nextIndex = index + 1;
 
+    // If the index of the next employee is out of bounds,
     if (nextIndex === employees.length) {
+        // Wrap it around to zero (the first employee)
         nextIndex = 0;
-    } else if (prevIndex < 0) {
+    } 
+
+    // If the index of the previous employee is out of bounds,
+    if (prevIndex < 0) {
+        // Wrap it around the the highest index (the last employee)
         prevIndex = employees.length - 1;
     }
 
+    // Handle click of previous and next buttons
     $("#modal-prev")
         .on("click", () => createModalForEmployee(employees, prevIndex));
     
