@@ -60,6 +60,7 @@ const stateAbbreviations = {
     texas: "TX",
     utah: "UT",
     vermont: "VT",
+    virginia: "VA",
     "west virginia": "WV",
     wisconsin: "WI",
     wyoming: "WY",
