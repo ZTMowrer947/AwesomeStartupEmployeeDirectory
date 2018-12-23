@@ -116,16 +116,26 @@ const createModalForEmployee = (employees, index) => {
     let prevIndex = index - 1;
     let nextIndex = index + 1;
 
+    // Get prev and next buttons
+    const $prevButton = $("#modal-prev")
+    const $nextButton = $("#modal-next");
+
     // If the index of the next employee is out of bounds,
     if (nextIndex === employees.length) {
         // Wrap it around to zero (the first employee)
         nextIndex = 0;
+
+        // Set text of next button to indicate the wrap-around
+        $nextButton.text("First");
     } 
 
     // If the index of the previous employee is out of bounds,
     if (prevIndex < 0) {
         // Wrap it around the the highest index (the last employee)
         prevIndex = employees.length - 1;
+
+        // Set text of next button to indicate the wrap-around
+        $prevButton.text("Last");
     }
 
     // Handle click of previous and next buttons
