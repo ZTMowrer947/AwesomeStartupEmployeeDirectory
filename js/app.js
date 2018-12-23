@@ -41,8 +41,13 @@ const fetchUsers = () => {
         .catch(error => console.error(error));
 }
 
-// Create modal display for employee
-const createModalForEmployee = (employee, index, totalEmployees) => {
+// Create modal display for the employee from the given array of employees with the given index
+const createModalForEmployee = (employees, index) => {
+    $(".modal-container").remove();
+
+    // Get employee
+    const employee = employees[index];
+
     // Get employee date of birth
     const dob = new Date(employee.dob.date);
 
@@ -85,6 +90,11 @@ const createModalForEmployee = (employee, index, totalEmployees) => {
                     <p class="modal-text">Birthday: ${dobString}</p>
                 </div>
             </div>
+
+            <div class="modal-btn-container">
+                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+                <button type="button" id="modal-next" class="modal-next btn">Next</button>
+            </div>
         </div>
     `;
 
@@ -96,6 +106,22 @@ const createModalForEmployee = (employee, index, totalEmployees) => {
     $("#modal-close-btn")
         // Close modal on click
         .on("click", () => $modal.remove());
+
+    // Declare variables for indexes (indices) for previous and next element
+    let prevIndex = index - 1;
+    let nextIndex = index + 1;
+
+    if (nextIndex === employees.length) {
+        nextIndex = 0;
+    } else if (prevIndex < 0) {
+        prevIndex = employees.length - 1;
+    }
+
+    $("#modal-prev")
+        .on("click", () => createModalForEmployee(employees, prevIndex));
+    
+    $("#modal-next")
+        .on("click", () => createModalForEmployee(employees, nextIndex));
 }
 
 // Function to run on page load
@@ -129,7 +155,7 @@ const onPageLoad = () => {
 
             // Event listener for click event on an employee item
             $employeeCard
-                .on("click", () => createModalForEmployee(employee, index, employees.length));
+                .on("click", () => createModalForEmployee(employees, index));
 
             /* Insert search functionality with following format:
                 <form action="#" method="get">
