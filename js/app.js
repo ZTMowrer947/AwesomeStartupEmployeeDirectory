@@ -41,6 +41,63 @@ const fetchUsers = () => {
         .catch(error => console.error(error));
 }
 
+// Create modal display for employee
+const createModalForEmployee = (employee, index, totalEmployees) => {
+    // Get employee date of birth
+    const dob = new Date(employee.dob.date);
+
+    // Set formatting options
+    const formatOptions = {
+        // 2-digit day (00 to 31)
+        day: "2-digit",
+        // 2-digit month (00 to 12)
+        month: "2-digit",
+        // Numeric year (2018)
+        year: "numeric",
+    }
+
+    // Format date of birth into expected format
+    const dobString = dob.toLocaleDateString(undefined, formatOptions);
+
+    const capitalizedStreetAddress = employee.location.street
+        .split(" ")
+        .map((streetPart) => capitalizeString(streetPart))
+        .join(" ");
+
+    // HTML Markup for employee modal
+    const modalHtml = `
+        <div class="modal-container">
+            <div class="modal">
+                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+                <div class="modal-info-container">
+                    <img class="modal-img" src="${employee.picture.large}" alt="profile picture">
+                    <h3 id="name" class="modal-name cap">${employee.name.first} ${employee.name.last}</h3>
+                    <p class="modal-text">${employee.email}</p>
+                    <p class="modal-text cap">${employee.location.city}</p>
+                    <hr>
+                    <p class="modal-text">${employee.phone}</p>
+                    <p class="modal-text">
+                        ${capitalizedStreetAddress}, 
+                        ${capitalizeString(employee.location.city)}, 
+                        ${stateAbbreviations[employee.location.state]}
+                        ${employee.location.postcode}
+                    </p>
+                    <p class="modal-text">Birthday: ${dobString}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Create modal and append to body
+    const $modal = $(modalHtml)
+        .appendTo($("body"));
+
+    // Attach listener to close button
+    $("#modal-close-btn")
+        // Close modal on click
+        .on("click", () => $modal.remove());
+}
+
 // Function to run on page load
 const onPageLoad = () => {
     // Request for the set of random users
@@ -48,7 +105,7 @@ const onPageLoad = () => {
         const employees = data.results;
 
         // For each employee in the set of data,
-        employees.forEach((employee) => {
+        employees.forEach((employee, index) => {
             // Interpolate their data into HTML markup
             const employeeHtml = `
                 <div class="card">
@@ -72,61 +129,7 @@ const onPageLoad = () => {
 
             // Event listener for click event on an employee item
             $employeeCard
-                .on("click", () => {
-                    // Get employee date of birth
-                    const dob = new Date(employee.dob.date);
-
-                    // Set formatting options
-                    const formatOptions = {
-                        // 2-digit day (00 to 31)
-                        day: "2-digit",
-                        // 2-digit month (00 to 12)
-                        month: "2-digit",
-                        // Numeric year (2018)
-                        year: "numeric",
-                    }
-
-                    // Format date of birth into expected format
-                    const dobString = dob.toLocaleDateString(undefined, formatOptions);
-
-                    const capitalizedStreetAddress = employee.location.street
-                        .split(" ")
-                        .map((streetPart) => capitalizeString(streetPart))
-                        .join(" ");
-
-                    // HTML Markup for employee modal
-                    const modalHtml = `
-                        <div class="modal-container">
-                            <div class="modal">
-                                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-                                <div class="modal-info-container">
-                                    <img class="modal-img" src="${employee.picture.large}" alt="profile picture">
-                                    <h3 id="name" class="modal-name cap">${employee.name.first} ${employee.name.last}</h3>
-                                    <p class="modal-text">${employee.email}</p>
-                                    <p class="modal-text cap">${employee.location.city}</p>
-                                    <hr>
-                                    <p class="modal-text">${employee.phone}</p>
-                                    <p class="modal-text">
-                                        ${capitalizedStreetAddress}, 
-                                        ${capitalizeString(employee.location.city)}, 
-                                        ${stateAbbreviations[employee.location.state]}
-                                        ${employee.location.postcode}
-                                    </p>
-                                    <p class="modal-text">Birthday: ${dobString}</p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    // Create modal and append to body
-                    const $modal = $(modalHtml)
-                        .appendTo($("body"));
-
-                    // Attach listener to close button
-                    $("#modal-close-btn")
-                        // Close modal on click
-                        .on("click", () => $modal.remove());
-                });
+                .on("click", () => createModalForEmployee(employee, index, employees.length));
 
             /* Insert search functionality with following format:
                 <form action="#" method="get">
