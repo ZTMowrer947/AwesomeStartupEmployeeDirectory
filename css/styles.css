@@ -119,6 +119,10 @@ header h1 {
     text-transform: capitalize;
 }
 
+.hide {
+    display: none;
+}
+
 
 /* ===================================== 
    Modal
