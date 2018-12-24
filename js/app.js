@@ -144,12 +144,68 @@ const createModalForEmployee = (employees, index) => {
     
     $("#modal-next")
         .on("click", () => createModalForEmployee(employees, nextIndex));
+};
+
+const searchDirectory = (query) => {
+    const $employeeCards = $(".card");
+
+    $employeeCards.each((index, card) => {
+        const $card = $(card);
+
+        const name = $card
+            .children(".card-info-container")
+            .children("#name")
+            .text();
+
+        if (name.includes(query))
+            $card.removeClass("hide");
+        else
+            $card.addClass("hide");
+    });
+};
+
+const handleSearch = (event) => {
+    // Get event target
+    const $target = $(event.target);
+
+    // Declare variable for search query
+    let query;
+
+    // If the target is the form,
+    if ($target.is("form"))
+        // Get the search query from the child input
+        query = $target.children("#search-input").val();
+    else // Otherwise, the target is the search input field
+        // Get the query from the input directly
+        query = $target.val();
+
+    // Search the directory with the given search query
+    searchDirectory(query);
 }
 
 // Function to run on page load
 const onPageLoad = () => {
     // Request for the set of random users
     fetchUsers().then(data => {
+        // Search form HTML Markup
+        const searchHtml = `
+            <form action="#" method="get">
+                <input type="search" id="search-input" class="search-input" placeholder="Search...">
+                <input type="submit" value="&#x1F50D;" id="serach-submit" class="search-submit">
+            </form>
+        `;
+
+        // Create search form
+        const $searchForm = $(searchHtml);
+
+        // Append it to DOM
+        $searchForm
+            .appendTo(".search-container");
+
+        // Handle form submission
+        $searchForm.on("submit", handleSearch);
+
+        // Get employee array from data
         const employees = data.results;
 
         // For each employee in the set of data,
@@ -178,13 +234,6 @@ const onPageLoad = () => {
             // Event listener for click event on an employee item
             $employeeCard
                 .on("click", () => createModalForEmployee(employees, index));
-
-            /* Insert search functionality with following format:
-                <form action="#" method="get">
-                    <input type="search" id="search-input" class="search-input" placeholder="Search...">
-                    <input type="submit" value="&#x1F50D;" id="serach-submit" class="search-submit">
-                </form>
-            */
         });
     });
 
