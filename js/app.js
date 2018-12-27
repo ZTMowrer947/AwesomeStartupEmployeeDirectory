@@ -41,6 +41,37 @@ const fetchUsers = () => {
         .catch(error => console.error(error));
 }
 
+// Create the cards for the given set of employees
+const createEmployeeCards = employees => {
+    // For each employee in the set of data,
+    employees.forEach((employee, index) => {
+        // Interpolate their data into HTML markup
+        const employeeHtml = `
+            <div class="card">
+                <div class="card-img-container">
+                    <img class="card-img" src="${employee.picture.medium}" alt="profile picture">
+                </div>
+                <div class="card-info-container">
+                    <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
+                    <p class="card-text">${employee.email}</p>
+                    <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
+                </div>
+            </div>
+        `;
+
+        // Create card for employee
+        const $employeeCard = $(employeeHtml);
+
+        // Append employee card to gallery
+        $employeeCard
+            .appendTo($("#gallery"));
+
+        // Event listener for click event on an employee item
+        $employeeCard
+            .on("click", () => createModalForEmployee(employees, index));
+    });
+};
+
 // Create modal display for the employee from the given array of employees with the given index
 const createModalForEmployee = (employees, index) => {
     // Remove any currently displayed modal containers
@@ -211,33 +242,8 @@ const onPageLoad = () => {
         // Get employee array from data
         const employees = data.results;
 
-        // For each employee in the set of data,
-        employees.forEach((employee, index) => {
-            // Interpolate their data into HTML markup
-            const employeeHtml = `
-                <div class="card">
-                    <div class="card-img-container">
-                        <img class="card-img" src="${employee.picture.medium}" alt="profile picture">
-                    </div>
-                    <div class="card-info-container">
-                        <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
-                        <p class="card-text">${employee.email}</p>
-                        <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
-                    </div>
-                </div>
-            `;
-
-            // Create card for employee
-            const $employeeCard = $(employeeHtml);
-
-            // Append employee card to gallery
-            $employeeCard
-                .appendTo($("#gallery"));
-
-            // Event listener for click event on an employee item
-            $employeeCard
-                .on("click", () => createModalForEmployee(employees, index));
-        });
+        // Create cards for employees
+        createEmployeeCards(employees);
     });
 
 }
