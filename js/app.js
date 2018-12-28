@@ -238,6 +238,9 @@ const onPageLoad = () => {
         // Handle form submission
         $searchForm.on("submit", event => handleSearch(event, employees));
 
+        // Perform search when input changes
+        $searchForm.children("#search-input").on("keyup", event => handleSearch(event, employees));
+
         // Get employee array from data
         const employees = data.results;
 
