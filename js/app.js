@@ -202,10 +202,13 @@ const handleSearch = (event, employees) => {
     let searchQuery;
 
     // If the target is the form,
-    if ($target.is("form"))
+    if ($target.is("form")) {
+        // Prevent form submission
+        event.preventDefault();
+
         // Get the search query from the child input
         searchQuery = $target.children("#search-input").val();
-    else // Otherwise, the target is the search input field
+    } else // Otherwise, the target is the search input field
         // Get the query from the input directly
         searchQuery = $target.val();
 
@@ -222,7 +225,7 @@ const onPageLoad = () => {
     fetchUsers().then(data => {
         // Search form HTML Markup
         const searchHtml = `
-            <form action="#" method="get">
+            <form method="get">
                 <input type="search" id="search-input" class="search-input" placeholder="Search...">
                 <input type="submit" value="&#x1F50D;" id="serach-submit" class="search-submit">
             </form>
