@@ -43,6 +43,9 @@ const fetchUsers = () => {
 
 // Create the cards for the given set of employees
 const createEmployeeCards = employees => {
+    // Remove all employee cards that currently exist
+    $(".card").remove();
+
     // For each employee in the set of data,
     employees.forEach((employee, index) => {
         // Interpolate their data into HTML markup
