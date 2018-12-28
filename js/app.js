@@ -180,41 +180,37 @@ const createModalForEmployee = (employees, index) => {
         .on("click", () => createModalForEmployee(employees, nextIndex));
 };
 
-const searchDirectory = (query) => {
-    const $employeeCards = $(".card");
+// Search the given set of employees and return the results
+const searchDirectory = (searchQuery, employees) => {
+    // Return the employees whose name includes the given search query
+    return employees.filter(employee => {
+        // Get employee full name
+        const fullName = `${employee.name.first} ${employee.name.last}`;
 
-    $employeeCards.each((index, card) => {
-        const $card = $(card);
-
-        const name = $card
-            .children(".card-info-container")
-            .children("#name")
-            .text();
-
-        if (name.includes(query))
-            $card.removeClass("hide");
-        else
-            $card.addClass("hide");
+        return fullName.includes(searchQuery)
     });
 };
 
-const handleSearch = (event) => {
+const handleSearch = (event, employees) => {
     // Get event target
     const $target = $(event.target);
 
     // Declare variable for search query
-    let query;
+    let searchQuery;
 
     // If the target is the form,
     if ($target.is("form"))
         // Get the search query from the child input
-        query = $target.children("#search-input").val();
+        searchQuery = $target.children("#search-input").val();
     else // Otherwise, the target is the search input field
         // Get the query from the input directly
-        query = $target.val();
+        searchQuery = $target.val();
 
     // Search the directory with the given search query
-    searchDirectory(query);
+    const results = searchDirectory(searchQuery, employees);
+
+    // Create the new set of cards for the results
+    createEmployeeCards(results);
 }
 
 // Function to run on page load
@@ -237,7 +233,7 @@ const onPageLoad = () => {
             .appendTo(".search-container");
 
         // Handle form submission
-        $searchForm.on("submit", handleSearch);
+        $searchForm.on("submit", event => handleSearch(event, employees));
 
         // Get employee array from data
         const employees = data.results;
