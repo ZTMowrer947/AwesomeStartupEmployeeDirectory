@@ -221,8 +221,14 @@ const handleSearch = (searchQuery, employees) => {
 const onPageLoad = () => {
     // Request for the set of random users
     fetchUsers().then(data => {
-        // Get employee array from data
-        const employees = data.results;
+        // Get employee array from data, maintaining current employee order for unsorting purposes
+        const unsortedEmployees = data.results;
+
+        /* 
+            Deeply copy employee data into mutable set
+            Thanks to https://stackoverflow.com/questions/18829099/copy-a-variables-value-into-another
+        */
+        let employees = $.extend(true, [], unsortedEmployees);
 
         // Search form HTML Markup
         const searchHtml = `
@@ -258,9 +264,48 @@ const onPageLoad = () => {
         $searchForm
             .appendTo(".search-container");
 
+        // Handle selection for sorting
+        $searchForm
+            .children("#sort-by")
+            .on("change", event => {
+                // Get sorting mode
+                const sortingMode = $(event.target).val();
+
+                // If we are not sorting,
+                if (sortingMode === "") {
+                    // Reset employees to original order
+                    employees = unsortedEmployees;
+                } else { // Otherwise,
+                    // Declare variable for name formatting
+                    let nameFormat;
+
+                    // If we are sorting by first, then last name,
+                    if (sortingMode.startsWith("firstlastname"))
+                        // Set format to such
+                        nameFormat = "%first% %last%";
+                    // If we are sorting by last, then first name,
+                    else if (sortingMode.startsWith("lastfirstname"))
+                        // Set format to such
+                        nameFormat = "%last%, %first%";
+
+                    // Sort the employees by name in the given format
+                    employees = employees.sort((a, b) => sortByName(nameFormat, a, b));
+
+                    // If we are sorting in descending order,
+                    if (sortingMode.endsWith("desc"))
+                        // Reverse the order
+                        employees = employees.reverse();
+                }
+
+                // Recreate cards
+                createEmployeeCards(employees);
+            });
+
         // Perform search when input changes
-        $searchForm.children("#search-input").on("keyup", event => 
-            handleSearch(event.target.value, employees));
+        $searchForm
+            .children("#search-input")
+            .on("keyup", event => 
+                handleSearch(event.target.value, employees));
 
         // Handle form submission
         $searchForm.on("submit", event => {
