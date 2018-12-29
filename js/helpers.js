@@ -80,3 +80,21 @@ const spaceship = (a,b) => {
     else
         return 0;
 };
+
+/*
+    Sort two employees by name using the given format.
+    %first% is replaced by the first name, %last% by the last name
+*/
+const sortByName = (nameFormat, employeeA, employeeB) => {
+    // Replace format placeholders with the actual parts of the name
+    const nameA = nameFormat
+        .replace("%first%", employeeA.name.first)
+        .replace("%last%", employeeA.name.last);
+
+    const nameB = nameFormat
+        .replace("%first%", employeeB.name.first)
+        .replace("%last%", employeeB.name.last);
+
+    // Apply spaceship operator to determine employee order
+    return spaceship(nameA, nameB);
+};
