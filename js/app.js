@@ -194,24 +194,8 @@ const searchDirectory = (searchQuery, employees) => {
     });
 };
 
-const handleSearch = (event, employees) => {
-    // Get event target
-    const $target = $(event.target);
-
-    // Declare variable for search query
-    let searchQuery;
-
-    // If the target is the form,
-    if ($target.is("form")) {
-        // Prevent form submission
-        event.preventDefault();
-
-        // Get the search query from the child input
-        searchQuery = $target.children("#search-input").val();
-    } else // Otherwise, the target is the search input field
-        // Get the query from the input directly
-        searchQuery = $target.val();
-
+// Handle searching
+const handleSearch = (searchQuery, employees) => {
     // Search the directory with the given search query
     const results = searchDirectory(searchQuery, employees);
 
@@ -260,11 +244,23 @@ const onPageLoad = () => {
         $searchForm
             .appendTo(".search-container");
 
-        // Handle form submission
-        $searchForm.on("submit", event => handleSearch(event, employees));
-
         // Perform search when input changes
-        $searchForm.children("#search-input").on("keyup", event => handleSearch(event, employees));
+        $searchForm.children("#search-input").on("keyup", event => 
+            handleSearch(event.target.value, employees));
+
+        // Handle form submission
+        $searchForm.on("submit", event => {
+            // Prevent form submission
+            event.preventDefault();
+
+            // Get search query field
+            const searchQuery = $(event.target)
+                .children("#search-input")
+                .val();
+
+            // Search directory and update display
+            handleSearch(searchQuery, employees);
+        });
 
         // Create cards for employees
         createEmployeeCards(employees);
