@@ -147,6 +147,7 @@ const createModalForEmployee = (employees, index) => {
 
     // If the employee is not the only one currently displayed,
     if (employees.length > 1) {
+        // Modal navigation HTML
         const modalNavHtml = `
         <div class="modal-btn-container">
             <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
@@ -154,6 +155,7 @@ const createModalForEmployee = (employees, index) => {
         </div>
         `;
 
+        // Create nav and append to modal
         const $modalNav = $(modalNavHtml)
             .appendTo($modal);
 
