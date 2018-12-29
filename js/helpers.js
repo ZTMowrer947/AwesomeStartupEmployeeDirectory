@@ -1,7 +1,7 @@
 // Enable strict mode
 "use strict";
 
-// Function to capitalize a string
+// Capitalize a string
 function capitalizeString(string) {
     // Get first character and make it uppercase
     const firstChar = string.charAt(0).toUpperCase();
@@ -64,4 +64,19 @@ const stateAbbreviations = {
     "west virginia": "WV",
     wisconsin: "WI",
     wyoming: "WY",
-}
+};
+
+/*
+    Implementation of spaceship operator (<=>) for sorting.
+    Returns -1 if first argument (a) is less than second argument (b),
+    0 if a equals b,
+    and 1 if a is greater than b
+*/
+const spaceship = (a,b) => {
+    if (a < b)
+        return -1;
+    else if (a > b)
+        return 1;
+    else
+        return 0;
+};
