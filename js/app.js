@@ -223,6 +223,9 @@ const handleSearch = (event, employees) => {
 const onPageLoad = () => {
     // Request for the set of random users
     fetchUsers().then(data => {
+        // Get employee array from data
+        const employees = data.results;
+
         // Search form HTML Markup
         const searchHtml = `
             <form method="get">
@@ -262,9 +265,6 @@ const onPageLoad = () => {
 
         // Perform search when input changes
         $searchForm.children("#search-input").on("keyup", event => handleSearch(event, employees));
-
-        // Get employee array from data
-        const employees = data.results;
 
         // Create cards for employees
         createEmployeeCards(employees);
