@@ -132,55 +132,67 @@ const createModalForEmployee = (employees, index) => {
                     <p class="modal-text">Birthday: ${dobString}</p>
                 </div>
             </div>
-
-            <div class="modal-btn-container">
-                <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
-                <button type="button" id="modal-next" class="modal-next btn">Next</button>
-            </div>
         </div>
     `;
 
-    // Create modal and append to body
-    const $modal = $(modalHtml)
-        .appendTo($("body"));
+    // Create modal
+    const $modal = $(modalHtml);
 
     // Attach listener to close button
-    $("#modal-close-btn")
+    $modal
+        .children(".modal")
+        .children("#modal-close-btn")
         // Close modal on click
         .on("click", () => $modal.remove());
 
-    // Declare variables for indexes (indices) for previous and next employee
-    let prevIndex = index - 1;
-    let nextIndex = index + 1;
+    // If the employee is not the only one currently displayed,
+    if (employees.length > 1) {
+        const modalNavHtml = `
+        <div class="modal-btn-container">
+            <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
+            <button type="button" id="modal-next" class="modal-next btn">Next</button>
+        </div>
+        `;
 
-    // Get prev and next buttons
-    const $prevButton = $("#modal-prev");
-    const $nextButton = $("#modal-next");
+        const $modalNav = $(modalNavHtml)
+            .appendTo($modal);
 
-    // If the index of the next employee is out of bounds,
-    if (nextIndex === employees.length) {
-        // Wrap it around to zero (the first employee)
-        nextIndex = 0;
+        // Declare variables for indexes (indices) for previous and next employee
+        let prevIndex = index - 1;
+        let nextIndex = index + 1;
 
-        // Set text of next button to indicate the wrap-around
-        $nextButton.text("First");
-    } 
+        // Get prev and next buttons
+        const $prevButton = $modalNav.children("#modal-prev");
+        const $nextButton = $modalNav.children("#modal-next");
 
-    // If the index of the previous employee is out of bounds,
-    if (prevIndex < 0) {
-        // Wrap it around the the highest index (the last employee)
-        prevIndex = employees.length - 1;
+        // If the index of the next employee is out of bounds,
+        if (nextIndex === employees.length) {
+            // Wrap it around to zero (the first employee)
+            nextIndex = 0;
 
-        // Set text of next button to indicate the wrap-around
-        $prevButton.text("Last");
+            // Set text of next button to indicate the wrap-around
+            $nextButton.text("First");
+        } 
+
+        // If the index of the previous employee is out of bounds,
+        if (prevIndex < 0) {
+            // Wrap it around the the highest index (the last employee)
+            prevIndex = employees.length - 1;
+
+            // Set text of next button to indicate the wrap-around
+            $prevButton.text("Last");
+        }
+
+        // Handle click of previous and next buttons
+        $prevButton
+            .on("click", () => createModalForEmployee(employees, prevIndex));
+        
+        $nextButton
+            .on("click", () => createModalForEmployee(employees, nextIndex));
     }
 
-    // Handle click of previous and next buttons
-    $("#modal-prev")
-        .on("click", () => createModalForEmployee(employees, prevIndex));
-    
-    $("#modal-next")
-        .on("click", () => createModalForEmployee(employees, nextIndex));
+    // In any case, append modal to DOM
+    $modal.appendTo("body");
 };
 
 // Search the given set of employees and return the results
