@@ -227,6 +227,14 @@ const onPageLoad = () => {
         const searchHtml = `
             <form method="get">
                 <input type="search" id="search-input" class="search-input" placeholder="Search...">
+                <label for="sort-by">Sort by:</label>
+                <select name="sort-by" id="sort-by">
+                    <option value="">Don't sort</option>
+                    <option value="firstlastname-asc">First/Last name (A-Z)</option>
+                    <option value="firstlastname-desc">First/Last name (Z-A)</option>
+                    <option value="lastfirstname-asc">Last/First name (A-Z)</option>
+                    <option value="lastfirstname-desc">Last/First name (Z-A)</option>
+                </select>
                 <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
             </form>
         `;
@@ -234,7 +242,18 @@ const onPageLoad = () => {
         // Create search form
         const $searchForm = $(searchHtml);
 
-        // Append it to DOM
+        // Set default sort option
+        $searchForm
+            // Get sort by select
+            .children("#sort-by")
+            // Get options
+            .children()
+            // Get first option
+            .first()
+            // Select it
+            .prop("selected", true);
+
+        // Append the form to the DOM
         $searchForm
             .appendTo(".search-container");
 
