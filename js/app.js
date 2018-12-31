@@ -264,61 +264,58 @@ const onPageLoad = () => {
         $searchForm
             .appendTo(".search-container");
 
+        // Search and Sorting function
+        const searchEmployeesAndSort = () => {
+            // Get sorting mode
+            const sortingMode = $("#sort-by").val();
+
+            // If we are not sorting,
+            if (sortingMode === "") {
+                // Reset employees to original order
+                employees = $.extend(true, [], unsortedEmployees);
+            } else { // Otherwise,
+                // Declare variable for name formatting
+                let nameFormat;
+
+                // If we are sorting by first, then last name,
+                if (sortingMode.startsWith("firstlastname"))
+                    // Set format to such
+                    nameFormat = "%first% %last%";
+                // If we are sorting by last, then first name,
+                else if (sortingMode.startsWith("lastfirstname"))
+                    // Set format to such
+                    nameFormat = "%last%, %first%";
+
+                // Sort the employees by name in the given format
+                employees = employees.sort((a, b) => sortByName(nameFormat, a, b));
+
+                // If we are sorting in descending order,
+                if (sortingMode.endsWith("desc"))
+                    // Reverse the order
+                    employees = employees.reverse();
+            }
+
+            // Perform a search
+            handleSearch($("#search-input").val(), employees);
+        }
+
         // Handle selection for sorting
         $searchForm
             .children("#sort-by")
-            .on("change", event => {
-                // Get sorting mode
-                const sortingMode = $(event.target).val();
-
-                // If we are not sorting,
-                if (sortingMode === "") {
-                    // Reset employees to original order
-                    employees = unsortedEmployees;
-                } else { // Otherwise,
-                    // Declare variable for name formatting
-                    let nameFormat;
-
-                    // If we are sorting by first, then last name,
-                    if (sortingMode.startsWith("firstlastname"))
-                        // Set format to such
-                        nameFormat = "%first% %last%";
-                    // If we are sorting by last, then first name,
-                    else if (sortingMode.startsWith("lastfirstname"))
-                        // Set format to such
-                        nameFormat = "%last%, %first%";
-
-                    // Sort the employees by name in the given format
-                    employees = employees.sort((a, b) => sortByName(nameFormat, a, b));
-
-                    // If we are sorting in descending order,
-                    if (sortingMode.endsWith("desc"))
-                        // Reverse the order
-                        employees = employees.reverse();
-                }
-
-                // Recreate cards
-                createEmployeeCards(employees);
-            });
+            .on("change", searchEmployeesAndSort);
 
         // Perform search when input changes
         $searchForm
             .children("#search-input")
-            .on("keyup", event => 
-                handleSearch(event.target.value, employees));
+            .on("keyup", searchEmployeesAndSort);
 
         // Handle form submission
         $searchForm.on("submit", event => {
             // Prevent form submission
             event.preventDefault();
 
-            // Get search query field
-            const searchQuery = $(event.target)
-                .children("#search-input")
-                .val();
-
-            // Search directory and update display
-            handleSearch(searchQuery, employees);
+            // Search and optionally sort employees
+            searchEmployeesAndSort();
         });
 
         // Create cards for employees
