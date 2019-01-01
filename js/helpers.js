@@ -102,8 +102,8 @@ const sortByName = (nameFormat, employeeA, employeeB) => {
 // Escapes HTML characters (<, >, and &) to prevent malicious HTML injection attacks
 const encodeHTML = (input) => 
     input
-        .replace(/</g, "&lt;")  // <
-        .replace(/>/g, "&gt;")  // >
-        .replace(/&/g, "&amp;") // &
-        .replace(/"/g, "&quot;") // "
-        .replace(/'/g, "&apos;") // '
+        .replace(/&/g, "&#38;") // &
+        .replace(/</g, "&#60;")  // <
+        .replace(/>/g, "&#62;")  // >
+        .replace(/"/g, "&#34;") // "
+        .replace(/'/g, "&#39;") // '
