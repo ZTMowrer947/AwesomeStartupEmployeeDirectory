@@ -213,8 +213,25 @@ const handleSearch = (searchQuery, employees) => {
     // Search the directory with the given search query
     const results = searchDirectory(searchQuery, employees);
 
-    // Create the new set of cards for the results
-    createEmployeeCards(results);
+    if (results.length > 0) {
+        // Remove any "No result" error that might have previously occured
+        $(".error").remove();
+
+        // Create the new set of cards for the results
+        createEmployeeCards(results);
+    } else { // Otherwise,
+        // Model a "No results" error in HTML
+        const errorHtml = `
+            <div class="error">
+                <h1>No results found</h1>
+                <p>The search term "${encodeHTML(searchQuery)}" matched no results.</p>
+            </div>
+        `;
+
+        // Create error element and append to gallery div
+        $(errorHtml)
+            .appendTo("#gallery");
+    }
 }
 
 // Function to run on page load
