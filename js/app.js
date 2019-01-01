@@ -254,10 +254,15 @@ const handleSearch = (searchQuery, employees) => {
 
 // Function to run on page load
 const onPageLoad = () => {
+    // Get gallery and append data loading message
+    const $gallery = $("#gallery")
+        .addClass("loading")
+        .append('<h1 class="loading-message">Loading employee data...</h1>');
+
     // Request for the set of random users
     fetchUsers().then(data => {
         // Remove loading message and class from gallery
-        $("#gallery")
+        $gallery
             .removeClass("loading")
             .children(".loading-message")
             .remove();
