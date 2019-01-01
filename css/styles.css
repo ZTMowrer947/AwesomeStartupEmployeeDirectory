@@ -121,18 +121,18 @@ header h1 {
 }
 
 /* ===================================== 
-   Error
+   Loading and Error
 ======================================== */
-#gallery.has-error {
+#gallery.has-error, #gallery.loading {
     height: calc(100% - 91.4px); /* Subtract header height */
     justify-content: center;
 }
-
-.error {
+ 
+.error, .loading-message {
     align-self: center;
 }
 
-.error h1 {
+.error h1, .loading-message {
     font-weight: bolder;
     color: gray;
 }
