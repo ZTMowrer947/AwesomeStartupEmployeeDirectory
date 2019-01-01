@@ -252,6 +252,12 @@ const handleSearch = (searchQuery, employees) => {
 const onPageLoad = () => {
     // Request for the set of random users
     fetchUsers().then(data => {
+        // Remove loading message and class from gallery
+        $("#gallery")
+            .removeClass("loading")
+            .children(".loading-message")
+            .remove();
+
         // Get employee array from data, maintaining current employee order for unsorting purposes
         const unsortedEmployees = data.results;
 
