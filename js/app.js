@@ -11,8 +11,12 @@ const randomUserApiVersion = 1.2;
 const queryParameters = {
     // Nationality (for search functionality's sake)
     nat: "us",
+
     // Number of users to generate data for
     results: 12,
+
+    // Exclude the following fields that we don't need
+    exc: "gender,login,registered,cell,nat",
 };
 
 // Condense query parameters object into a single query string
