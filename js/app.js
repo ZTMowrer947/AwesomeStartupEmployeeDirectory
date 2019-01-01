@@ -17,6 +17,9 @@ const queryParameters = {
 
     // Exclude the following fields that we don't need
     exc: "gender,login,registered,cell,nat",
+
+    // Do not pass info along with request, we don't need it
+    noinfo: true,
 };
 
 // Condense query parameters object into a single query string
