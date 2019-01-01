@@ -213,15 +213,24 @@ const handleSearch = (searchQuery, employees) => {
     // Remove any "No result" error that might have previously occured
     $(".error").remove();
 
+    // Get employee gallery
+    const $gallery = $("#gallery");
+
     // Search the directory with the given search query
     const results = searchDirectory(searchQuery, employees);
 
     if (results.length > 0) {
+        // Remove has-error class from gallery
+        $gallery.removeClass("has-error");
+
         // Create the new set of cards for the results
         createEmployeeCards(results);
     } else { // Otherwise,
         // Remove all employee cards
         $(".card").remove();
+
+        // Add has-error class to gallery
+        $gallery.addClass("has-error");
 
         // Model a "No results" error in HTML
         const errorHtml = `
@@ -230,6 +239,8 @@ const handleSearch = (searchQuery, employees) => {
                 <p>The search term "${encodeHTML(searchQuery)}" matched no results.</p>
             </div>
         `;
+
+        //
 
         // Create error element and append to gallery div
         $(errorHtml)

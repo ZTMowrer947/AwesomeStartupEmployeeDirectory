@@ -17,6 +17,7 @@ body {
     font-family: "Nunito", sans-serif;
     text-align: center;
     background: rgba(235, 235, 235, 0.9);
+    height: 100vh;
 }
 
 header {
@@ -119,10 +120,22 @@ header h1 {
     text-transform: capitalize;
 }
 
-.hide {
-    display: none;
+/* ===================================== 
+   Error
+======================================== */
+#gallery.has-error {
+    height: calc(100% - 91.4px); /* Subtract header height */
+    justify-content: center;
 }
 
+.error {
+    align-self: center;
+}
+
+.error h1 {
+    font-weight: bolder;
+    color: gray;
+}
 
 /* ===================================== 
    Modal
