@@ -98,3 +98,12 @@ const sortByName = (nameFormat, employeeA, employeeB) => {
     // Apply spaceship operator to determine employee order
     return spaceship(nameA, nameB);
 };
+
+// Escapes HTML characters (<, >, and &) to prevent malicious HTML injection attacks
+const encodeHTML = (input) => 
+    input
+        .replace(/</g, "&lt;")  // <
+        .replace(/>/g, "&gt;")  // >
+        .replace(/&/g, "&amp;") // &
+        .replace(/"/g, "&quot;") // "
+        .replace(/'/g, "&apos;") // '
