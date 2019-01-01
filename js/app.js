@@ -32,6 +32,57 @@ const queryString = Object.keys(queryParameters)
             `${paramKey}=${queryParameters[paramKey]}`,
         "");                  // If there are no query parameters, set query string to an empty string
 
+// Check status of response
+const checkStatus = response => {
+    // If the response was successful,
+    if (response.ok) {
+        // Resolve the promise, passing the response
+        return Promise.resolve(response);
+    } else { // Otherwise, something went wrong
+        // Declare variable for error message
+        let errorMessage;
+
+        // Determine status code and act accordingly
+        switch (response.status) {
+            case 404: // If it was a 404,
+                // Indicate that we could not find the requested url
+                errorMessage = `Could not find "${response.url}".`;
+                break;
+
+            default: // Otherwise,
+                // Try to get an error object from the response body
+                try {
+                    // Get error from response body
+                    const error = response.json().error;
+
+                    // Set error message to it
+                    errorMessage = error;
+                } catch (err) { // If that doesn't work,
+                    // Just say to try again later
+                    errorMessage = "An unexpected error occurred. Please try again later.";
+                }
+                break;
+        }
+
+        // Create error and reject promise
+        return Promise.reject(new Error(errorMessage));
+    }
+};
+
+// Handle API errors
+const handleAPIError = error => {
+    $("#gallery").addClass("has-error");
+
+    const errorHtml = `
+        <div class="error api-error">
+            <h1>An error occured with accessing the database.</h1>
+            <p>${error.message}</p>
+        </div>
+    `;
+
+    $(errorHtml).appendTo("#gallery");
+}
+
 // Function for fetching data from the Random User API
 const fetchUsers = () => {
     // Determine API endpoint from version and query string
@@ -39,10 +90,12 @@ const fetchUsers = () => {
 
     // Make a request to the API
     return fetch(`https://randomuser.me/api/${endpoint}`)
+        // Check status of response before continuing
+        .then(checkStatus)
         // Convert the response into JSON and parse it
         .then(response => response.json())
         // Catch any errors and log it to the console
-        .catch(error => console.error(error));
+        .catch(handleAPIError);
 }
 
 // Create the cards for the given set of employees
