@@ -210,16 +210,19 @@ const searchDirectory = (searchQuery, employees) => {
 
 // Handle searching
 const handleSearch = (searchQuery, employees) => {
+    // Remove any "No result" error that might have previously occured
+    $(".error").remove();
+
     // Search the directory with the given search query
     const results = searchDirectory(searchQuery, employees);
 
     if (results.length > 0) {
-        // Remove any "No result" error that might have previously occured
-        $(".error").remove();
-
         // Create the new set of cards for the results
         createEmployeeCards(results);
     } else { // Otherwise,
+        // Remove all employee cards
+        $(".card").remove();
+
         // Model a "No results" error in HTML
         const errorHtml = `
             <div class="error">
