@@ -45,6 +45,10 @@ This project is an employee directory for a fantasy startup company consisting o
 - Styles have been modified for additional touches that will be noted in the next section.
 
 ### Other things of note
+- The API version to use is explicitly specified to ensure compatibility in the future as newer versions of the API are released.
+- Query parameters for the API request are formatted in an easily readable and modifiable object before being passed to the request as a query string.
+    - The nationality of the users to generate is set to the US, so as to comply with search functionality as well as state abbreviations.
+    - Fields that are not needed for our purposes are excluded to reduce API overhead and increase performance slightly.
 - A loading message is added to the DOM prior to the employee data being present, and is removed once the data is retrieved.
 - If an error occurs with retrieving data from the API, the application displays error information and halts.
 - A sorting feature has been added to the search functionality, allowing the following methods of sorting:
