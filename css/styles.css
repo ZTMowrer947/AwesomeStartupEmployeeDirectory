@@ -63,6 +63,11 @@ header h1 {
     border: 1px solid rgba(50, 50, 50, 0.9);
 }
 
+.darkmode-container {
+    margin-top: auto;
+    margin-bottom: 1rem;
+}
+
 
 /* ===================================== 
    Gallery
@@ -227,7 +232,27 @@ header h1 {
     transition: .4s ease-out;
     outline: none;
   }
-  
+
+/* ===================================== 
+   Dark Mode
+======================================== */ 
+body.dark {
+    transition: .4s ease-out;
+}
+
+body.dark, body.dark .modal, body.dark .modal-btn-container {
+    background: rgb(25, 25, 25);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+body.dark .modal-text, body.dark .card-text, body.dark header h1 {
+    color: rgba(205, 205, 205, 0.7);
+}
+
+body.dark .card {
+    background: rgba(10, 10, 10, 0.9)
+}
+
 
 /* ===================================== 
    Media Queries
@@ -280,5 +305,9 @@ header h1 {
     .btn:hover {
         background: rgba(255, 255, 255, 1);
         color: rgba(25, 25, 25, 1); 
+    }
+
+    body.dark .card:hover .card-text {
+        color: rgba(230, 230, 230, 1);
     }
 }
