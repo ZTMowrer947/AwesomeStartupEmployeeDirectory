@@ -315,6 +315,25 @@ const onPageLoad = () => {
         .addClass("loading")
         .append('<h1 class="loading-message">Loading employee data...</h1>');
 
+    // Model dark mode toggle
+    const darkModeHtml = `
+        <div class="darkmode-container">
+            <label for="dark_mode">Dark Mode</label>
+            <input type="checkbox" name="dark_mode" id="dark_mode" />
+        </div>
+    `;
+    
+    // Create it
+    const $darkModeToggle = $(darkModeHtml);
+    
+    // Configure checkbox to toggle dark mode
+    $darkModeToggle.children("#dark_mode")
+        .on("change", () => $("body").toggleClass("dark"));
+    
+    // Add to DOM before search container
+    $darkModeToggle
+        .insertBefore(".search-container");
+
     // Request for the set of random users
     fetchUsers().then(data => {
         // Remove loading message and class from gallery
