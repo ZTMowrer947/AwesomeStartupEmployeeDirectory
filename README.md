@@ -37,12 +37,7 @@ This project is an employee directory for a fantasy startup company consisting o
 - No errors occur in the console when the beginning or the end is reached.
 
 #### Structure, style, and CSS
-- In the modal, the state is formatted as a 2-letter state code.
-    - Note: The requirements state that I did not have to do this, but I initially did not notice this. I found this out after already implementing the 2-letter code format. I decided to leave it in to match the mockups more closely.
-
-- In the modal, the date of birth has a 4-digit year (as compared to the 2-digit year present in the mockups)
-
-- Styles have been modified for additional touches that will be noted in the next section.
+- Styles have been added for a dark mode theme that can be toggled on or off.
 
 ### Other things of note
 - The API version to use is explicitly specified to ensure compatibility in the future as newer versions of the API are released.
@@ -58,3 +53,6 @@ This project is an employee directory for a fantasy startup company consisting o
 - If a search query returns no results, a message appears to indicate such.
     - Note: The search query text is displayed within the message, so HTML characters within it are escaped to prevent HTML injection attacks.
 - When the modal navigation reaches the beginning or end of the list, the respective button text changes to reflect this, and when clicked, the modal navigation wraps around to the other end of the list.
+- In the modal, the state is formatted as a 2-letter state code.
+    - Note: The requirements state that I did not have to do this, but I initially did not notice this. I found this out after already implementing the 2-letter code format. I decided to leave it in to match the mockups more closely.
+- In the modal, the date of birth has a 4-digit year (as compared to the 2-digit year present in the mockups)
