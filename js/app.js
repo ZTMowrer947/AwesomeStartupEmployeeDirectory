@@ -1,7 +1,7 @@
 // Enable strict mode
 "use strict";
 
-/* 
+/*
     Version of Random User API to use. This ensures that data will always be returned
     in the way we expect. The current version at the time of coding is version 1.2
 */
@@ -25,23 +25,25 @@ const queryParameters = {
 // Condense query parameters object into a single query string
 const queryString = Object.keys(queryParameters)
     // Reduce array of query parameter keys into a single value
-    .reduce((queryString, paramKey, index) =>
-        queryString += (
-                index === 0 ? // If this is the first element,
-                "?" :         // Insert the starting question mark
-                "&"           // Otherwise, insert the joining ampersand
-            ) +
-            // Insert the key-value pair itself
-            `${paramKey}=${queryParameters[paramKey]}`,
-        "");                  // If there are no query parameters, set query string to an empty string
+    .reduce(
+        (queryString, paramKey, index) =>
+            (queryString +=
+                (index === 0 // If this is the first element,
+                    ? "?" // Insert the starting question mark
+                    : "&") + // Otherwise, insert the joining ampersand
+                // Insert the key-value pair itself
+                `${paramKey}=${queryParameters[paramKey]}`),
+        ""
+    ); // If there are no query parameters, set query string to an empty string
 
 // Check status of response
-const checkStatus = response => {
+const checkStatus = (response) => {
     // If the response was successful,
     if (response.ok) {
         // Resolve the promise, passing the response
         return Promise.resolve(response);
-    } else { // Otherwise, something went wrong
+    } else {
+        // Otherwise, something went wrong
         // Declare variable for error message
         let errorMessage;
 
@@ -52,7 +54,8 @@ const checkStatus = response => {
                 errorMessage = `Could not find "${response.url}".`;
                 break;
 
-            default: // Otherwise,
+            default:
+                // Otherwise,
                 // Try to get an error object from the response body
                 try {
                     // Get error from response body
@@ -60,9 +63,11 @@ const checkStatus = response => {
 
                     // Set error message to it
                     errorMessage = error;
-                } catch (err) { // If that doesn't work,
+                } catch (err) {
+                    // If that doesn't work,
                     // Just say to try again later
-                    errorMessage = "An unexpected error occurred. Please try again later.";
+                    errorMessage =
+                        "An unexpected error occurred. Please try again later.";
                 }
                 break;
         }
@@ -73,8 +78,12 @@ const checkStatus = response => {
 };
 
 // Handle API errors
-const handleAPIError = error => {
-    $("#gallery").addClass("has-error");
+const handleAPIError = (error) => {
+    // Retrieve gallery element
+    const gallery = document.querySelector("#gallery");
+
+    // Add has-error class to gallery
+    gallery.classList.add("has-error");
 
     const errorHtml = `
         <div class="error api-error">
@@ -83,8 +92,9 @@ const handleAPIError = error => {
         </div>
     `;
 
-    $(errorHtml).appendTo("#gallery");
-}
+    // Append error to gallery
+    gallery.insertAdjacentHTML("beforeend", errorHtml);
+};
 
 // Function for fetching data from the Random User API
 const fetchUsers = () => {
@@ -92,17 +102,19 @@ const fetchUsers = () => {
     const endpoint = `${randomUserApiVersion}` + queryString;
 
     // Make a request to the API
-    return fetch(`https://randomuser.me/api/${endpoint}`)
-        // Check status of response before continuing
-        .then(checkStatus)
-        // Convert the response into JSON and parse it
-        .then(response => response.json())
-        // Catch any errors and log it to the console
-        .catch(handleAPIError);
-}
+    return (
+        fetch(`https://randomuser.me/api/${endpoint}`)
+            // Check status of response before continuing
+            .then(checkStatus)
+            // Convert the response into JSON and parse it
+            .then((response) => response.json())
+            // Catch any errors and log it to the console
+            .catch(handleAPIError)
+    );
+};
 
 // Create the cards for the given set of employees
-const createEmployeeCards = employees => {
+const createEmployeeCards = (employees) => {
     // Remove all employee cards that currently exist
     $(".card").remove();
 
@@ -126,12 +138,12 @@ const createEmployeeCards = employees => {
         const $employeeCard = $(employeeHtml);
 
         // Append employee card to gallery
-        $employeeCard
-            .appendTo($("#gallery"));
+        $employeeCard.appendTo($("#gallery"));
 
         // Event listener for click event on an employee item
-        $employeeCard
-            .on("click", () => createModalForEmployee(employees, index));
+        $employeeCard.on("click", () =>
+            createModalForEmployee(employees, index)
+        );
     });
 };
 
@@ -157,7 +169,7 @@ const createModalForEmployee = (employees, index) => {
         month: "2-digit",
         // Numeric year (2018)
         year: "numeric",
-    }
+    };
 
     // Format date of birth into expected format
     const dobString = dob.toLocaleDateString(undefined, formatOptions);
@@ -177,15 +189,17 @@ const createModalForEmployee = (employees, index) => {
             <div class="modal">
                 <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
                 <div class="modal-info-container">
-                    <img class="modal-img" src="${employee.picture.large}" alt="profile picture">
+                    <img class="modal-img" src="${
+                        employee.picture.large
+                    }" alt="profile picture">
                     <h3 id="name" class="modal-name cap">${employeeName}</h3>
                     <p class="modal-text">${employee.email}</p>
                     <p class="modal-text cap">${employee.location.city}</p>
                     <hr>
                     <p class="modal-text">${employee.phone}</p>
                     <p class="modal-text">
-                        ${capitalizedStreetAddress}, 
-                        ${capitalizeString(employee.location.city)}, 
+                        ${capitalizedStreetAddress},
+                        ${capitalizeString(employee.location.city)},
                         ${stateAbbreviations[employee.location.state]}
                         ${employee.location.postcode}
                     </p>
@@ -216,8 +230,7 @@ const createModalForEmployee = (employees, index) => {
         `;
 
         // Create nav and append to modal
-        const $modalNav = $(modalNavHtml)
-            .appendTo($modal);
+        const $modalNav = $(modalNavHtml).appendTo($modal);
 
         // Declare variables for indexes (indices) for previous and next employee
         let prevIndex = index - 1;
@@ -234,7 +247,7 @@ const createModalForEmployee = (employees, index) => {
 
             // Set text of next button to indicate the wrap-around
             $nextButton.text("First");
-        } 
+        }
 
         // If the index of the previous employee is out of bounds,
         if (prevIndex < 0) {
@@ -246,11 +259,13 @@ const createModalForEmployee = (employees, index) => {
         }
 
         // Handle click of previous and next buttons
-        $prevButton
-            .on("click", () => createModalForEmployee(employees, prevIndex));
-        
-        $nextButton
-            .on("click", () => createModalForEmployee(employees, nextIndex));
+        $prevButton.on("click", () =>
+            createModalForEmployee(employees, prevIndex)
+        );
+
+        $nextButton.on("click", () =>
+            createModalForEmployee(employees, nextIndex)
+        );
     }
 
     // In any case, append modal to DOM
@@ -260,11 +275,11 @@ const createModalForEmployee = (employees, index) => {
 // Search the given set of employees and return the results
 const searchDirectory = (searchQuery, employees) => {
     // Return the employees whose name includes the given search query
-    return employees.filter(employee => {
+    return employees.filter((employee) => {
         // Get employee full name
         const fullName = `${employee.name.first} ${employee.name.last}`;
 
-        return fullName.includes(searchQuery)
+        return fullName.includes(searchQuery);
     });
 };
 
@@ -285,7 +300,8 @@ const handleSearch = (searchQuery, employees) => {
 
         // Create the new set of cards for the results
         createEmployeeCards(results);
-    } else { // Otherwise,
+    } else {
+        // Otherwise,
         // Remove all employee cards
         $(".card").remove();
 
@@ -296,17 +312,18 @@ const handleSearch = (searchQuery, employees) => {
         const errorHtml = `
             <div class="error">
                 <h1>No results found</h1>
-                <p>The search term "${encodeHTML(searchQuery)}" matched no results.</p>
+                <p>The search term "${encodeHTML(
+                    searchQuery
+                )}" matched no results.</p>
             </div>
         `;
 
         //
 
         // Create error element and append to gallery div
-        $(errorHtml)
-            .appendTo("#gallery");
+        $(errorHtml).appendTo("#gallery");
     }
-}
+};
 
 // Function to run on page load
 const onPageLoad = () => {
@@ -316,12 +333,9 @@ const onPageLoad = () => {
         .append('<h1 class="loading-message">Loading employee data...</h1>');
 
     // Request for the set of random users
-    fetchUsers().then(data => {
+    fetchUsers().then((data) => {
         // Remove loading message and class from gallery
-        $gallery
-            .removeClass("loading")
-            .children(".loading-message")
-            .remove();
+        $gallery.removeClass("loading").children(".loading-message").remove();
 
         // Model dark mode toggle
         const darkModeHtml = `
@@ -335,17 +349,17 @@ const onPageLoad = () => {
         const $darkModeToggle = $(darkModeHtml);
 
         // Configure checkbox to toggle dark mode
-        $darkModeToggle.children("#dark_mode")
+        $darkModeToggle
+            .children("#dark_mode")
             .on("change", () => $("body").toggleClass("dark"));
 
         // Add to DOM before search container
-        $darkModeToggle
-            .insertBefore(".search-container");
+        $darkModeToggle.insertBefore(".search-container");
 
         // Get employee array from data, maintaining current employee order for unsorting purposes
         const unsortedEmployees = data.results;
 
-        /* 
+        /*
             Deeply copy employee data into mutable set
             Thanks to https://stackoverflow.com/questions/18829099/copy-a-variables-value-into-another
         */
@@ -382,8 +396,7 @@ const onPageLoad = () => {
             .prop("selected", true);
 
         // Append the form to the DOM
-        $searchForm
-            .appendTo(".search-container");
+        $searchForm.appendTo(".search-container");
 
         // Search and Sorting function
         const searchEmployeesAndSort = () => {
@@ -394,7 +407,8 @@ const onPageLoad = () => {
             if (sortingMode === "") {
                 // Reset employees to original order
                 employees = $.extend(true, [], unsortedEmployees);
-            } else { // Otherwise,
+            } else {
+                // Otherwise,
                 // Declare variable for name formatting
                 let nameFormat;
 
@@ -408,7 +422,9 @@ const onPageLoad = () => {
                     nameFormat = "%last%, %first%";
 
                 // Sort the employees by name in the given format
-                employees = employees.sort((a, b) => sortByName(nameFormat, a, b));
+                employees = employees.sort((a, b) =>
+                    sortByName(nameFormat, a, b)
+                );
 
                 // If we are sorting in descending order,
                 if (sortingMode.endsWith("desc"))
@@ -418,12 +434,10 @@ const onPageLoad = () => {
 
             // Perform a search
             handleSearch($("#search-input").val(), employees);
-        }
+        };
 
         // Handle selection for sorting
-        $searchForm
-            .children("#sort-by")
-            .on("change", searchEmployeesAndSort);
+        $searchForm.children("#sort-by").on("change", searchEmployeesAndSort);
 
         // Perform search when input changes
         $searchForm
@@ -431,7 +445,7 @@ const onPageLoad = () => {
             .on("keyup", searchEmployeesAndSort);
 
         // Handle form submission
-        $searchForm.on("submit", event => {
+        $searchForm.on("submit", (event) => {
             // Prevent form submission
             event.preventDefault();
 
@@ -442,8 +456,7 @@ const onPageLoad = () => {
         // Create cards for employees
         createEmployeeCards(employees);
     });
-
-}
+};
 
 // Run function on page load
 $(onPageLoad);
