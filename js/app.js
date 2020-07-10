@@ -153,7 +153,9 @@ const createEmployeeCards = (employees) => {
 // Create modal display for the employee from the given array of employees with the given index
 const createModalForEmployee = (employees, index) => {
     // Remove any currently displayed modal containers
-    $(".modal-container").remove();
+    document
+        .querySelectorAll(".modal-container")
+        .forEach((modal) => modal.remove());
 
     // Get employee
     const employee = employees[index];
@@ -186,62 +188,68 @@ const createModalForEmployee = (employees, index) => {
         // Join it back together with a space
         .join(" ");
 
+    // Create modal element
+    const modal = document.createElement("div");
+    modal.classList.add("modal-container");
+
     // HTML Markup for employee modal
     const modalHtml = `
-        <div class="modal-container">
-            <div class="modal">
-                <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
-                <div class="modal-info-container">
-                    <img class="modal-img" src="${
-                        employee.picture.large
-                    }" alt="profile picture">
-                    <h3 id="name" class="modal-name cap">${employeeName}</h3>
-                    <p class="modal-text">${employee.email}</p>
-                    <p class="modal-text cap">${employee.location.city}</p>
-                    <hr>
-                    <p class="modal-text">${employee.phone}</p>
-                    <p class="modal-text">
-                        ${capitalizedStreetAddress},
-                        ${capitalizeString(employee.location.city)},
-                        ${stateAbbreviations[employee.location.state]}
-                        ${employee.location.postcode}
-                    </p>
-                    <p class="modal-text">Birthday: ${dobString}</p>
-                </div>
+        <div class="modal">
+            <button type="button" id="modal-close-btn" class="modal-close-btn"><strong>X</strong></button>
+            <div class="modal-info-container">
+                <img class="modal-img" src="${
+                    employee.picture.large
+                }" alt="profile picture">
+                <h3 id="name" class="modal-name cap">${employeeName}</h3>
+                <p class="modal-text">${employee.email}</p>
+                <p class="modal-text cap">${employee.location.city}</p>
+                <hr>
+                <p class="modal-text">${employee.phone}</p>
+                <p class="modal-text">
+                    ${capitalizedStreetAddress},
+                    ${capitalizeString(employee.location.city)},
+                    ${stateAbbreviations[employee.location.state]}
+                    ${employee.location.postcode}
+                </p>
+                <p class="modal-text">Birthday: ${dobString}</p>
             </div>
         </div>
     `;
 
-    // Create modal
-    const $modal = $(modalHtml);
+    // Insert HTML into modal
+    modal.innerHTML = modalHtml;
 
-    // Attach listener to close button
-    $modal
-        .children(".modal")
-        .children("#modal-close-btn")
-        // Close modal on click
-        .on("click", () => $modal.remove());
+    // Get close button
+    const closeBtn = modal.querySelector("#modal-close-btn");
+
+    // Attach click listener to close button, closing the modal on click
+    closeBtn.addEventListener("click", () => modal.remove());
 
     // If the employee is not the only one currently displayed,
     if (employees.length > 1) {
+        // Create modal nav element
+        const modalNav = document.createElement("div");
+        modalNav.classList.add("modal-btn-container");
+
         // Modal navigation HTML
         const modalNavHtml = `
-        <div class="modal-btn-container">
             <button type="button" id="modal-prev" class="modal-prev btn">Prev</button>
             <button type="button" id="modal-next" class="modal-next btn">Next</button>
-        </div>
         `;
 
-        // Create nav and append to modal
-        const $modalNav = $(modalNavHtml).appendTo($modal);
+        // Insert HTML into nav
+        modalNav.innerHTML = modalNavHtml;
+
+        // Append nav to modal
+        modal.appendChild(modalNav);
 
         // Declare variables for indexes (indices) for previous and next employee
         let prevIndex = index - 1;
         let nextIndex = index + 1;
 
         // Get prev and next buttons
-        const $prevButton = $modalNav.children("#modal-prev");
-        const $nextButton = $modalNav.children("#modal-next");
+        const prevButton = modalNav.querySelector("#modal-prev");
+        const nextButton = modalNav.querySelector("#modal-next");
 
         // If the index of the next employee is out of bounds,
         if (nextIndex === employees.length) {
@@ -249,7 +257,7 @@ const createModalForEmployee = (employees, index) => {
             nextIndex = 0;
 
             // Set text of next button to indicate the wrap-around
-            $nextButton.text("First");
+            nextButton.textContent = "First";
         }
 
         // If the index of the previous employee is out of bounds,
@@ -258,21 +266,21 @@ const createModalForEmployee = (employees, index) => {
             prevIndex = employees.length - 1;
 
             // Set text of next button to indicate the wrap-around
-            $prevButton.text("Last");
+            prevButton.textContent = "Last";
         }
 
         // Handle click of previous and next buttons
-        $prevButton.on("click", () =>
+        prevButton.addEventListener("click", () =>
             createModalForEmployee(employees, prevIndex)
         );
 
-        $nextButton.on("click", () =>
+        nextButton.addEventListener("click", () =>
             createModalForEmployee(employees, nextIndex)
         );
     }
 
     // In any case, append modal to DOM
-    $modal.appendTo("body");
+    document.body.appendChild(modal);
 };
 
 // Search the given set of employees and return the results
@@ -320,8 +328,6 @@ const handleSearch = (searchQuery, employees) => {
                 )}" matched no results.</p>
             </div>
         `;
-
-        //
 
         // Create error element and append to gallery div
         $(errorHtml).appendTo("#gallery");
