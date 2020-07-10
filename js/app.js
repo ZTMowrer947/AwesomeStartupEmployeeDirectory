@@ -116,32 +116,35 @@ const fetchUsers = () => {
 // Create the cards for the given set of employees
 const createEmployeeCards = (employees) => {
     // Remove all employee cards that currently exist
-    $(".card").remove();
+    document.querySelectorAll(".card").forEach((card) => card.remove());
 
     // For each employee in the set of data,
     employees.forEach((employee, index) => {
         // Interpolate their data into HTML markup
         const employeeHtml = `
-            <div class="card">
-                <div class="card-img-container">
-                    <img class="card-img" src="${employee.picture.medium}" alt="profile picture">
-                </div>
-                <div class="card-info-container">
-                    <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
-                    <p class="card-text">${employee.email}</p>
-                    <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
-                </div>
+            <div class="card-img-container">
+                <img class="card-img" src="${employee.picture.medium}" alt="profile picture">
+            </div>
+            <div class="card-info-container">
+                <h3 id="name" class="card-name cap">${employee.name.first} ${employee.name.last}</h3>
+                <p class="card-text">${employee.email}</p>
+                <p class="card-text cap">${employee.location.city}, ${employee.location.state}</p>
             </div>
         `;
 
         // Create card for employee
-        const $employeeCard = $(employeeHtml);
+        const employeeCard = document.createElement("div");
+        employeeCard.classList.add("card");
+
+        // Insert employee markup into card
+        employeeCard.innerHTML = employeeHtml;
 
         // Append employee card to gallery
-        $employeeCard.appendTo($("#gallery"));
+        const gallery = document.querySelector("#gallery");
+        gallery.appendChild(employeeCard);
 
         // Event listener for click event on an employee item
-        $employeeCard.on("click", () =>
+        employeeCard.addEventListener("click", () =>
             createModalForEmployee(employees, index)
         );
     });
