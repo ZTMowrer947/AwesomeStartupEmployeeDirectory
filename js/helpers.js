@@ -72,38 +72,17 @@ const stateAbbreviations = {
     0 if a equals b,
     and 1 if a is greater than b
 */
-const spaceship = (a,b) => {
-    if (a < b)
-        return -1;
-    else if (a > b)
-        return 1;
-    else
-        return 0;
-};
-
-/*
-    Sort two employees by name using the given format.
-    %first% is replaced by the first name, %last% by the last name
-*/
-const sortByName = (nameFormat, employeeA, employeeB) => {
-    // Replace format placeholders with the actual parts of the name
-    const nameA = nameFormat
-        .replace("%first%", employeeA.name.first)
-        .replace("%last%", employeeA.name.last);
-
-    const nameB = nameFormat
-        .replace("%first%", employeeB.name.first)
-        .replace("%last%", employeeB.name.last);
-
-    // Apply spaceship operator to determine employee order
-    return spaceship(nameA, nameB);
+const spaceship = (a, b) => {
+    if (a < b) return -1;
+    else if (a > b) return 1;
+    else return 0;
 };
 
 // Escapes HTML characters (<, >, and &) to prevent malicious HTML injection attacks
-const encodeHTML = (input) => 
+const encodeHTML = (input) =>
     input
         .replace(/&/g, "&#38;") // &
-        .replace(/</g, "&#60;")  // <
-        .replace(/>/g, "&#62;")  // >
+        .replace(/</g, "&#60;") // <
+        .replace(/>/g, "&#62;") // >
         .replace(/"/g, "&#34;") // "
-        .replace(/'/g, "&#39;") // '
+        .replace(/'/g, "&#39;"); // '

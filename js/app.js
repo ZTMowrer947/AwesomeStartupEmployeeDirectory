@@ -400,14 +400,6 @@ const onPageLoad = () => {
         // Search form HTML Markup
         const searchHtml = `
             <input type="search" id="search-input" class="search-input" placeholder="Search..." />
-            <label for="sort-by">Sort by:</label>
-            <select name="sort-by" id="sort-by">
-                <option value="">Don't sort</option>
-                <option value="firstlastname-asc">First/Last name (A-Z)</option>
-                <option value="firstlastname-desc">First/Last name (Z-A)</option>
-                <option value="lastfirstname-asc">Last/First name (A-Z)</option>
-                <option value="lastfirstname-desc">Last/First name (Z-A)</option>
-            </select>
             <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit" />
         `;
 
@@ -415,64 +407,20 @@ const onPageLoad = () => {
         const searchForm = document.createElement("form");
         searchForm.innerHTML = searchHtml;
 
-        // Get first sort option and select it
-        searchForm
-            .querySelector("#sort-by")
-            .querySelector("option").selected = true;
-
         // Append the form to the DOM
         searchContainer.appendChild(searchForm);
 
-        // Search and Sorting function
-        const searchEmployeesAndSort = () => {
-            // Get sorting mode
-            const sortingMode = document.querySelector("#sort-by").value;
-
-            // If we are not sorting,
-            if (sortingMode === "") {
-                // Reset employees to original order
-                employees = unsortedEmployees.map((employee) =>
-                    Object.assign({}, employee)
-                );
-            } else {
-                // Otherwise,
-                // Declare variable for name formatting
-                let nameFormat;
-
-                // If we are sorting by first, then last name,
-                if (sortingMode.startsWith("firstlastname"))
-                    // Set format to such
-                    nameFormat = "%first% %last%";
-                // If we are sorting by last, then first name,
-                else if (sortingMode.startsWith("lastfirstname"))
-                    // Set format to such
-                    nameFormat = "%last%, %first%";
-
-                // Sort the employees by name in the given format
-                employees = employees.sort((a, b) =>
-                    sortByName(nameFormat, a, b)
-                );
-
-                // If we are sorting in descending order,
-                if (sortingMode.endsWith("desc"))
-                    // Reverse the order
-                    employees = employees.reverse();
-            }
-
+        // Search listener
+        const searchEmployees = () => {
             // Perform a search
             const searchTerm = document.querySelector("#search-input").value;
             handleSearch(searchTerm, employees);
         };
 
-        // Handle selection for sorting
-        searchForm
-            .querySelector("#sort-by")
-            .addEventListener("change", searchEmployeesAndSort);
-
         // Perform search when input changes
         searchForm
             .querySelector("#search-input")
-            .addEventListener("keyup", searchEmployeesAndSort);
+            .addEventListener("keyup", searchEmployees);
 
         // Handle form submission
         searchForm.addEventListener("submit", (event) => {
@@ -480,7 +428,7 @@ const onPageLoad = () => {
             event.preventDefault();
 
             // Search and optionally sort employees
-            searchEmployeesAndSort();
+            searchEmployees();
         });
 
         // Create cards for employees
