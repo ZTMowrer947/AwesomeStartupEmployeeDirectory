@@ -393,40 +393,37 @@ const onPageLoad = () => {
             Deeply copy employee data into mutable set
             Thanks to https://stackoverflow.com/questions/18829099/copy-a-variables-value-into-another
         */
-        let employees = $.extend(true, [], unsortedEmployees);
+        let employees = unsortedEmployees.map((employee) =>
+            Object.assign({}, employee)
+        );
 
         // Search form HTML Markup
         const searchHtml = `
-            <form method="get">
-                <input type="search" id="search-input" class="search-input" placeholder="Search...">
-                <label for="sort-by">Sort by:</label>
-                <select name="sort-by" id="sort-by">
-                    <option value="">Don't sort</option>
-                    <option value="firstlastname-asc">First/Last name (A-Z)</option>
-                    <option value="firstlastname-desc">First/Last name (Z-A)</option>
-                    <option value="lastfirstname-asc">Last/First name (A-Z)</option>
-                    <option value="lastfirstname-desc">Last/First name (Z-A)</option>
-                </select>
-                <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-            </form>
+            <input type="search" id="search-input" class="search-input" placeholder="Search..." />
+            <label for="sort-by">Sort by:</label>
+            <select name="sort-by" id="sort-by">
+                <option value="">Don't sort</option>
+                <option value="firstlastname-asc">First/Last name (A-Z)</option>
+                <option value="firstlastname-desc">First/Last name (Z-A)</option>
+                <option value="lastfirstname-asc">Last/First name (A-Z)</option>
+                <option value="lastfirstname-desc">Last/First name (Z-A)</option>
+            </select>
+            <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit" />
         `;
 
         // Create search form
-        const $searchForm = $(searchHtml);
+        const searchForm = document.createElement("form");
+        searchForm.innerHTML = searchHtml;
 
-        // Set default sort option
-        $searchForm
-            // Get sort by select
-            .children("#sort-by")
-            // Get options
-            .children()
-            // Get first option
-            .first()
-            // Select it
-            .prop("selected", true);
+        const $searchForm = $(searchForm);
+
+        // Get first sort option and select it
+        searchForm
+            .querySelector("#sort-by")
+            .querySelector("option").selected = true;
 
         // Append the form to the DOM
-        $searchForm.appendTo(".search-container");
+        searchContainer.appendChild(searchForm);
 
         // Search and Sorting function
         const searchEmployeesAndSort = () => {
@@ -436,7 +433,9 @@ const onPageLoad = () => {
             // If we are not sorting,
             if (sortingMode === "") {
                 // Reset employees to original order
-                employees = $.extend(true, [], unsortedEmployees);
+                employees = unsortedEmployees.map((employee) =>
+                    Object.assign({}, employee)
+                );
             } else {
                 // Otherwise,
                 // Declare variable for name formatting
