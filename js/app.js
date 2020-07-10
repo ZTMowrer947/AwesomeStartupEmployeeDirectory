@@ -336,34 +336,55 @@ const handleSearch = (searchQuery, employees) => {
 
 // Function to run on page load
 const onPageLoad = () => {
-    // Get gallery and append data loading message
-    const $gallery = $("#gallery")
-        .addClass("loading")
-        .append('<h1 class="loading-message">Loading employee data...</h1>');
+    // Get gallery and loading class
+    const gallery = document.querySelector("#gallery");
+    gallery.classList.add("loading");
+
+    // Create loading message
+    let loadingMsg = document.createElement("h1");
+    loadingMsg.classList.add("loading-message");
+    loadingMsg.textContent = "Loading employee data...";
+
+    // Append loading message to gallery
+    gallery.appendChild(loadingMsg);
 
     // Request for the set of random users
     fetchUsers().then((data) => {
         // Remove loading message and class from gallery
-        $gallery.removeClass("loading").children(".loading-message").remove();
+        gallery.classList.remove("loading");
+        loadingMsg = gallery.querySelector(".loading-message");
+        loadingMsg.remove();
 
         // Model dark mode toggle
         const darkModeHtml = `
-            <div class="darkmode-container">
-                <label for="dark_mode">Dark Mode</label>
-                <input type="checkbox" name="dark_mode" id="dark_mode" />
-            </div>
+            <label for="dark_mode">Dark Mode</label>
+            <input type="checkbox" name="dark_mode" id="dark_mode" />
         `;
 
         // Create it
-        const $darkModeToggle = $(darkModeHtml);
+        const darkModeToggle = document.createElement("div");
+        darkModeToggle.classList.add("darkmode-toggle");
+
+        // Insert HTML into toggle
+        darkModeToggle.innerHTML = darkModeHtml;
 
         // Configure checkbox to toggle dark mode
-        $darkModeToggle
-            .children("#dark_mode")
-            .on("change", () => $("body").toggleClass("dark"));
+        const darkModeCheckbox = darkModeToggle.querySelector("#dark_mode");
+
+        darkModeCheckbox.addEventListener("change", (event) => {
+            // If dark mode is checked,
+            if (event.target.checked) {
+                // Add dark class to body
+                document.body.classList.add("dark");
+            } else {
+                // Otherwise, remove dark class from body
+                document.body.classList.remove("dark");
+            }
+        });
 
         // Add to DOM before search container
-        $darkModeToggle.insertBefore(".search-container");
+        const searchContainer = document.querySelector(".search-container");
+        searchContainer.insertAdjacentElement("beforebegin", darkModeToggle);
 
         // Get employee array from data, maintaining current employee order for unsorting purposes
         const unsortedEmployees = data.results;
