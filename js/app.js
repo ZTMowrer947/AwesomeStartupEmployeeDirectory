@@ -415,8 +415,6 @@ const onPageLoad = () => {
         const searchForm = document.createElement("form");
         searchForm.innerHTML = searchHtml;
 
-        const $searchForm = $(searchForm);
-
         // Get first sort option and select it
         searchForm
             .querySelector("#sort-by")
@@ -428,7 +426,7 @@ const onPageLoad = () => {
         // Search and Sorting function
         const searchEmployeesAndSort = () => {
             // Get sorting mode
-            const sortingMode = $("#sort-by").val();
+            const sortingMode = document.querySelector("#sort-by").value;
 
             // If we are not sorting,
             if (sortingMode === "") {
@@ -462,19 +460,22 @@ const onPageLoad = () => {
             }
 
             // Perform a search
-            handleSearch($("#search-input").val(), employees);
+            const searchTerm = document.querySelector("#search-input").value;
+            handleSearch(searchTerm, employees);
         };
 
         // Handle selection for sorting
-        $searchForm.children("#sort-by").on("change", searchEmployeesAndSort);
+        searchForm
+            .querySelector("#sort-by")
+            .addEventListener("change", searchEmployeesAndSort);
 
         // Perform search when input changes
-        $searchForm
-            .children("#search-input")
-            .on("keyup", searchEmployeesAndSort);
+        searchForm
+            .querySelector("#search-input")
+            .addEventListener("keyup", searchEmployeesAndSort);
 
         // Handle form submission
-        $searchForm.on("submit", (event) => {
+        searchForm.addEventListener("submit", (event) => {
             // Prevent form submission
             event.preventDefault();
 
@@ -487,5 +488,11 @@ const onPageLoad = () => {
     });
 };
 
-// Run function on page load
-$(onPageLoad);
+// If the page is still loading,
+if (document.readyState === "loading") {
+    // Run function when DOM is ready
+    document.addEventListener("DOMContentLoaded", onPageLoad);
+} else {
+    // Otherwise, run function immediately
+    onPageLoad();
+}
