@@ -297,27 +297,27 @@ const searchDirectory = (searchQuery, employees) => {
 // Handle searching
 const handleSearch = (searchQuery, employees) => {
     // Remove any "No result" error that might have previously occured
-    $(".error").remove();
+    document.querySelectorAll(".error").forEach((error) => error.remove());
 
     // Get employee gallery
-    const $gallery = $("#gallery");
+    const gallery = document.querySelector("#gallery");
 
     // Search the directory with the given search query
     const results = searchDirectory(searchQuery, employees);
 
     if (results.length > 0) {
         // Remove has-error class from gallery
-        $gallery.removeClass("has-error");
+        gallery.classList.remove("has-error");
 
         // Create the new set of cards for the results
         createEmployeeCards(results);
     } else {
         // Otherwise,
         // Remove all employee cards
-        $(".card").remove();
+        document.querySelectorAll(".card").forEach((card) => card.remove());
 
         // Add has-error class to gallery
-        $gallery.addClass("has-error");
+        gallery.classList.add("has-error");
 
         // Model a "No results" error in HTML
         const errorHtml = `
@@ -329,8 +329,8 @@ const handleSearch = (searchQuery, employees) => {
             </div>
         `;
 
-        // Create error element and append to gallery div
-        $(errorHtml).appendTo("#gallery");
+        // Append error HTML to gallery div
+        gallery.insertAdjacentHTML("beforeend", errorHtml);
     }
 };
 
